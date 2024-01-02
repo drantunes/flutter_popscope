@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class FormPage extends StatefulWidget {
@@ -51,41 +53,50 @@ class _FormPageState extends State<FormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Form Page'),
-      ),
-      body: Form(
-        canPop: formSaved,
-        onPopInvoked: (bool didPop) {
-          if (didPop) {
-            return;
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        if (Platform.isIOS && details.delta.dx > 8) {
+          if (!formSaved) {
+            _showAlert();
           }
-          _showAlert();
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _name,
-                onChanged: (_) => setState(() => formSaved = false),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text('Nome'),
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Form Page 1'),
+        ),
+        body: PopScope(
+          canPop: formSaved,
+          onPopInvoked: (bool didPop) {
+            if (didPop) {
+              return;
+            }
+            _showAlert();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextFormField(
+                  controller: _name,
+                  onChanged: (_) => setState(() => formSaved = false),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    label: Text('Nome'),
+                  ),
                 ),
-              ),
-              FilledButton(
-                onPressed: () => _save(_name.text),
-                child: const Text('Salvar'),
-              ),
-              TextButton(
-                onPressed: () => formSaved ? Navigator.of(context).pop() : _showAlert(),
-                child: const Text('Cancelar'),
-              ),
-            ],
+                FilledButton(
+                  onPressed: () => _save(_name.text),
+                  child: const Text('Salvar'),
+                ),
+                TextButton(
+                  onPressed: () => formSaved ? Navigator.of(context).pop() : _showAlert(),
+                  child: const Text('Cancelar'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

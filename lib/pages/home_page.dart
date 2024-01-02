@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
         title: const Text('Home'),
       ),
       body: Center(
-        child: FilledButton.tonal(
+        child: FilledButton(
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => const FormPage(),
